@@ -132,3 +132,55 @@ INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
 
   return 0
 }
+
+function generateMicroOrm() {
+  
+  cd configs
+  touch microOrm.config.ts
+
+cat << DOF > microOrm.config.ts
+import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
+
+export const mikroOrmConfig = (): MikroOrmModuleOptions => {
+  const {
+    DB_HOST,
+    DB_PORT,
+    DB_USERNAME,
+    DB_PASSWORD,
+    DB_NAME,
+    DB_SYNCHRONIZE,
+  } = process.env;
+
+  return {
+    type: 'postgresql',
+    host: DB_HOST,
+    port: Number(DB_PORT),
+    user: DB_USERNAME,
+    password: DB_PASSWORD,
+    dbName: DB_NAME,
+    synchronize: !!Number(DB_SYNCHRONIZE)
+  };
+};
+DOF
+
+cd "../modules"
+
+cat << DOF > app/app.module.ts
+import { Module } from '@nestjs/common';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { mikroOrmConfig } from '../../configs/mikro-orm.config';
+
+@Module({
+  imports: [
+    MikroOrmModule.forRoot(mikroOrmConfig()),
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+DOF
+
+INSTALL_PACKAGES+=("@micro-orm/nestjs" "@mikro-orm/core")
+
+  return 0
+}

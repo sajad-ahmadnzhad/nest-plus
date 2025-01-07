@@ -52,24 +52,24 @@ EOF
     fi
     changeAppModule
     INSTALL_PACKAGES=()
-    CHOICE=$(printf "TypeORM\nPrisma\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
+    CHOICE=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
     if [ -n "$CHOICE" ]; then
         case $CHOICE in 
             "TypeORM")
             cd src
             generateTypeorm
+            echo "Generated typeorm configs successfully."
              ;;
              "MicroORM")
-             echo "This is microorm"
-             ;;
-             "Prisma")
-             echo "This is prisma"
+             cd src
+             generateMicroOrm
+             echo "Generated microOrm configs successfully."
              ;;
              "Mongoose")
              cd src
              generateMongoose
-             echo "Generate mongoose configs successfully."
+             echo "Generated mongoose configs successfully."
              ;;
              "No Database")
              echo "This is no database"
