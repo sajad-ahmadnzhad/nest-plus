@@ -18,6 +18,15 @@ if [ $? -eq 0 ]; then
     touch .env
     touch .env.example
 
+cat << EOF > ".env"
+PORT=4000
+EOF
+
+cat << EOF > ".env.example"
+#Application configs
+PORT=
+EOF
+
     yesOrNo "prettierrc and eslintrc.js be removed?"
 
     if [ $INPUT = "y" ]; then 
