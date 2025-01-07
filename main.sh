@@ -66,11 +66,16 @@ EOF
              "Prisma")
              echo "This is prisma"
              ;;
+             "Mongoose")
+             cd src
+             generateMongoose
+             echo "Generate mongoose configs successfully."
+             ;;
              "No Database")
              echo "This is no database"
              ;;
              *)
-             echo "Not found"
+             echo "Not found item"
              ;;
         esac
     else 

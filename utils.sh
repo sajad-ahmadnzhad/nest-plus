@@ -78,3 +78,57 @@ INSTALL_PACKAGES+=("typeorm" "@nestjs/typeorm")
 
     return 0
 }
+
+
+function generateMongoose(){
+  
+cd configs
+touch mongoose.config.ts
+
+cat << "EOF" > mongoose.config.ts
+export const mongooseConfig = () => {
+  const {
+    DB_HOST,
+    DB_PORT,
+    DB_NAME,
+    DB_USERNAME,
+    DB_PASSWORD,
+  } = process.env;
+
+  let uri = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+  
+  if (DB_USERNAME && DB_PASSWORD) {
+    uri = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+  }
+
+  return {
+    uri,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  };
+};
+EOF
+
+cd "../modules"
+
+cat << DOF > app/app.module.ts
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { mongooseConfig } from '../../configs/mongoose.config';
+
+@Module({
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: mongooseConfig,
+    }),
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
+DOF
+
+INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
+
+  return 0
+}
