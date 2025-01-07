@@ -96,12 +96,15 @@ EOF
         echo "Maria was set as the database"
         ;;
         "Sqlite")
+        configSqlite
         echo "Sqlite was set as the database"
         ;;
         *)
         echo "No db selected"
         exit 1
     esac
+
+    echo "${INSTALL_PACKAGES[@]}"
 
     fi
 

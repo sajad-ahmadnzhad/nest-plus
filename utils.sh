@@ -67,7 +67,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { typeormConfig } from "../../configs/typeorm.config";
 
 @Module({
-  imports: [ TypeOrmModule.forRoot(typeormConfig()) ],
+  imports: [ 
+  TypeOrmModule.forRoot(typeormConfig())
+  ],
   controllers: [],
   providers: []
 })
@@ -231,6 +233,21 @@ function configMariadb(){
       "MicroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mariadb" "mariadb")
       sed -i "14s/postgresql/mariadb/" configs/microOrm.config.ts
+      ;;
+  esac
+
+  return 0
+}
+
+function configSqlite(){
+  case "$CHOICE_ORMS" in 
+      "TypeORM")
+      INSTALL_PACKAGES+=("sqlite3")
+      sed -i "14s/postgres/sqlite/" configs/typeorm.config.ts
+      ;;
+      "MicroORM")
+      INSTALL_PACKAGES+=("@mikro-orm/sqlite" "sqlite3")
+      sed -i "14s/postgresql/sqlite/" configs/microOrm.config.ts
       ;;
   esac
 
