@@ -11,3 +11,18 @@ function yesOrNo() {
     
     return 0
 }
+
+function changeAppModule() {
+    {
+        echo "import { Module } from '@nestjs/common';"
+        echo ""
+        echo "@Module({"
+        echo "  imports: [],"
+        echo "  controllers: [],"
+        echo "  providers: []"
+        echo "})"
+        echo "export class AppModule {}"
+    } > src/modules/app.module.ts
+    
+    return 0
+}

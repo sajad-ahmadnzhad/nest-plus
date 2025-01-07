@@ -38,16 +38,5 @@ if [ $? -eq 0 ]; then
         fi
 
     fi
-
-      {
-        echo "import { Module } from '@nestjs/common';"
-        echo ""
-        echo "@Module({"
-        echo "  imports: [],"
-        echo "  controllers: [],"
-        echo "  providers: []"
-        echo "})"
-        echo "export class AppModule {}"
-    } > src/modules/app.module.ts
-      
+    changeAppModule
 fi
