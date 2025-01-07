@@ -52,10 +52,10 @@ EOF
     fi
     changeAppModule
     INSTALL_PACKAGES=()
-    CHOICE=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
+    CHOICE_ORMS=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
-    if [ -n "$CHOICE" ]; then
-        case $CHOICE in 
+    if [ -n "$CHOICE_ORMS" ]; then
+        case $CHOICE_ORMS in 
             "TypeORM")
             cd src
             generateTypeorm
@@ -72,12 +72,37 @@ EOF
              echo "Generated mongoose configs successfully."
              ;;
              "No Database")
-             echo "This is no database"
+             echo "no database selected"
              ;;
              *)
              echo "Not found item"
              ;;
         esac
+
+    if [ $CHOICE_ORMS != "No Database" ]; then
+    CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite" | fzf --prompt="Select database: ")
+
+    case $CHOICE_DB in 
+        "Mysql")
+        configMysql
+        echo "Mysql was set as the database"
+        ;;
+        "Postgresql")
+        echo "Postgresql db"
+        ;;
+        "Mariadb")
+        echo "Maria db"
+        ;;
+        "Sqlite")
+        echo "Sqlite db"
+        ;;
+        *)
+        echo "No db selected"
+        exit 1
+    esac
+
+    fi
+
     else 
         ceho "No item was selected"
         exit 1

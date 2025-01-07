@@ -74,6 +74,8 @@ import { typeormConfig } from "../../configs/typeorm.config";
 export class AppModule {}
 EOF
 
+cd ../
+
 INSTALL_PACKAGES+=("typeorm" "@nestjs/typeorm")
 
     return 0
@@ -128,6 +130,8 @@ import { mongooseConfig } from '../../configs/mongoose.config';
 export class AppModule {}
 DOF
 
+cd ../
+
 INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
 
   return 0
@@ -180,7 +184,26 @@ import { mikroOrmConfig } from '../../configs/mikro-orm.config';
 export class AppModule {}
 DOF
 
+cd ../
+
 INSTALL_PACKAGES+=("@micro-orm/nestjs" "@mikro-orm/core")
+
+  return 0
+}
+
+
+function configMysql(){
+  
+  case "$CHOICE_ORMS" in 
+      "TypeORM")
+      INSTALL_PACKAGES+=("mysql2")
+      sed -i '14s/postgres/mysql/' configs/typeorm.config.ts
+      ;;
+      "MicroORM")
+      INSTALL_PACKAGES+=("@mikro-orm/mysql" "mysql2")
+      sed -i '14s/postgres/mysql/' configs/microOrm.config.ts
+      ;;
+  esac
 
   return 0
 }
