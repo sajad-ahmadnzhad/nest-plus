@@ -92,10 +92,11 @@ EOF
         echo "Postgresql was set as the database"
         ;;
         "Mariadb")
-        echo "Maria db"
+        configMariadb
+        echo "Maria was set as the database"
         ;;
         "Sqlite")
-        echo "Sqlite db"
+        echo "Sqlite was set as the database"
         ;;
         *)
         echo "No db selected"

@@ -201,7 +201,7 @@ function configMysql(){
       ;;
       "MicroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mysql" "mysql2")
-      sed -i '14s/postgres/mysql/' configs/microOrm.config.ts
+      sed -i '14s/postgresql/mysql/' configs/microOrm.config.ts
       ;;
   esac
 
@@ -216,6 +216,21 @@ function configPostgresql(){
       ;;
       "MicroORM")
       INSTALL_PACKAGES+=("@mikro-orm/postgresql" "pg")
+      ;;
+  esac
+
+  return 0
+}
+
+function configMariadb(){
+  case "$CHOICE_ORMS" in 
+      "TypeORM")
+      INSTALL_PACKAGES+=("mariadb")
+      sed -i "14s/postgres/mariadb/" configs/typeorm.config.ts
+      ;;
+      "MicroORM")
+      INSTALL_PACKAGES+=("@mikro-orm/mariadb" "mariadb")
+      sed -i "14s/postgresql/mariadb/" configs/microOrm.config.ts
       ;;
   esac
 
