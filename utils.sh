@@ -207,3 +207,17 @@ function configMysql(){
 
   return 0
 }
+
+
+function configPostgresql(){
+  case "$CHOICE_ORMS" in 
+      "TypeORM")
+      INSTALL_PACKAGES+=("pg")
+      ;;
+      "MicroORM")
+      INSTALL_PACKAGES+=("@mikro-orm/postgresql" "pg")
+      ;;
+  esac
+
+  return 0
+}

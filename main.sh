@@ -88,7 +88,8 @@ EOF
         echo "Mysql was set as the database"
         ;;
         "Postgresql")
-        echo "Postgresql db"
+        configPostgresql
+        echo "Postgresql was set as the database"
         ;;
         "Mariadb")
         echo "Maria db"
