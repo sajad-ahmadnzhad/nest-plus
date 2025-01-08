@@ -244,10 +244,12 @@ function configSqlite(){
       "TypeORM")
       INSTALL_PACKAGES+=("sqlite3")
       sed -i "14s/postgres/sqlite/" configs/typeorm.config.ts
+      sed -i "15d;5d" configs/typeorm.config.ts
       ;;
       "MicroORM")
       INSTALL_PACKAGES+=("@mikro-orm/sqlite" "sqlite3")
       sed -i "14s/postgresql/sqlite/" configs/microOrm.config.ts
+      sed -i "15d;5d" configs/typeorm.config.ts
       ;;
   esac
 
