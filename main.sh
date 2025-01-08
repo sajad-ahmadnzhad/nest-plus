@@ -12,13 +12,18 @@ if [ $? != 0 ]; then
 example for linux: sudo apt install fzf
 example for macos: brew install fzf
 ${RESET}"
-echo $$
-read -p "$(echo -e ${RED}Please enter command for isntall fzf: ${RESET})" "COMMAND"
+read -p "$(echo -e ${BLUE}Please enter command for isntall fzf: ${RESET})" "COMMAND"
 command $COMMAND
+
+if [ $? != 0 ]; then
+    echo -e "${RED}fzf installation command failed. please try again${RESET}"
+    exit 1
+fi
+
 echo -e "${GREEN}fzf installed successfully${RESET}"
 fi
 
-read -t 10 -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
+read -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
 
 npx nest new $PROJECT_NAME --skip-install
 if [ $? -eq 0 ]; then
@@ -59,7 +64,7 @@ EOF
     sed -i "10d;15d;37,41d;43d" package.json
     fi
 
-    yesOrNo $(echo -e "${YELLOW}Test files are deleted?${RESET}")
+    yesOrNo "$(echo -e "${YELLOW}Test files are deleted?${RESET}")"
 
     if [ $INPUT = "y" -a -d "test" ]; then
         rm -rf 'test'
@@ -135,9 +140,9 @@ EOF
     fi
 
     cd ..
-    echo -e "${BLUE}Plase wait for downloading packages.....${RESET}"
+    echo -e "${BLUE}Please wait for installing packages.....${RESET}"
     npx yarn install
-    echo -e "${BLUE}Wait for downloading ${INSTALL_PACKAGES[@]}.....${RESET}"
+    echo -e "${BLUE}Wait for installing ${INSTALL_PACKAGES[@]}.....${RESET}"
     npx yarn add "${INSTALL_PACKAGES[@]}"
     echo -e "${GREEN}Thanks for using nest-plus${RESET}"
 fi
