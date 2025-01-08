@@ -27,6 +27,13 @@ function changeAppModule() {
     return 0
 }
 
+function changeMainFile(){
+  cd src
+  sed -i "2s/app.module/modules\/app\/app.module/" "main.ts"
+  cd ..
+  return 0
+}
+
 function generateTypeorm() {
 
     cd configs

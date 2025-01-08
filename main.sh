@@ -3,8 +3,12 @@
 read -t 10 -p "Enter project name: " "PROJECT_NAME"
 
 npx nest new $PROJECT_NAME --skip-install
-
 if [ $? -eq 0 ]; then
+
+    if [ ! "$PROJECT_NAME" ]; then
+        PROJECT_NAME="nest-app"
+    fi
+
     source utils.sh
     cd "$PROJECT_NAME/src"
     mkdir "common"
@@ -115,7 +119,7 @@ EOF
     cd ..
     echo "Plase wait for downloading packages....."
     npx yarn install
-    echo "Wait for downloading database packages....."
+    echo "Wait for downloading ${INSTALL_PACKAGES[@]}....."
     npx yarn add "${INSTALL_PACKAGES[@]}"
     echo "Thanks for using nest-plus"
 fi
