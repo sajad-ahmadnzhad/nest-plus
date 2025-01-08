@@ -51,6 +51,7 @@ EOF
 
     fi
     changeAppModule
+    changeMainFile
     INSTALL_PACKAGES=()
     CHOICE_ORMS=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
@@ -104,8 +105,6 @@ EOF
         exit 1
     esac
 
-    echo "${INSTALL_PACKAGES[@]}"
-
     fi
 
     else 
@@ -113,5 +112,11 @@ EOF
         exit 1
     fi
 
+    cd ..
+    echo "Plase wait for downloading packages....."
+    npx yarn install
+    echo "Wait for downloading database packages....."
+    npx yarn add "${INSTALL_PACKAGES[@]}"
+    echo "Thanks for using nest-plus"
 fi
 
