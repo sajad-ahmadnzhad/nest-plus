@@ -1,6 +1,26 @@
 #!/bin/bash
 
-read -t 10 -p "Enter project name: " "PROJECT_NAME"
+RED='\e[31m'
+GREEN='\e[32m'
+YELLOW='\e[33m'
+BLUE='\e[34m'
+RESET='\e[0m'
+READ_BLUE_COLOR=$(tput setaf 4)
+READ_REST_COLOR_CMD=$(tput sgr0)
+
+IS_INSTALL_FZF=$(command -v fzf)
+if [ $? != 0 ]; then
+    echo -e "${YELLOW}Please install fzf to continue...
+example for linux: sudo apt install fzf
+example for macos: brew install fzf
+${RESET}"
+
+read -p "${READ_BLUE_COLOR}Plase enter command for install fzf: ${READ_REST_COLOR_CMD}" "COMMAND"
+command $COMMAND
+echo -e "${GREEN}fzf installed successfully${RESET}"
+fi
+
+read -t 10 -p "${READ_BLUE_COLOR}Enter project name${READ_REST_COLOR_CMD}: " "PROJECT_NAME"
 
 npx nest new $PROJECT_NAME --skip-install
 if [ $? -eq 0 ]; then
@@ -30,6 +50,8 @@ cat << EOF > ".env.example"
 #Application configs
 PORT=
 EOF
+    changeAppModule
+    changeMainFile
 
     yesOrNo "prettierrc and eslintrc.js be removed?"
 
@@ -54,8 +76,6 @@ EOF
         fi
 
     fi
-    changeAppModule
-    changeMainFile
     INSTALL_PACKAGES=()
     CHOICE_ORMS=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
@@ -84,7 +104,7 @@ EOF
              ;;
         esac
 
-    if [ $CHOICE_ORMS != "No Database" ]; then
+    if [[ "$CHOICE_ORMS" != "No Database" && "$CHOICE_ORMS" != "Mongoose" ]]; then
     CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite" | fzf --prompt="Select database: ")
 
     case $CHOICE_DB in 
@@ -114,6 +134,27 @@ EOF
     else 
         ceho "No item was selected"
         exit 1
+    fi
+
+    yesOrNo "Need more options?"
+
+    if [ $INPUT = 'y' ]; then 
+        CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
+        case $CHOICE_REDIS in 
+            "Redis")
+            cd src
+            configRedis
+            echo "generated redis configs successfully"
+            ;;
+            "Redis cache manager")
+            echo "generated redis cache manager configs successfully"
+            ;;
+            "No redis")
+            echo "No redis selected"
+            ;;
+            *)
+            echo "Not found item"
+        esac
     fi
 
     cd ..
