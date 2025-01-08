@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function yesOrNo() {
-    read -p "$1 Y/N: " "INPUT"
+    read -p "$1 [Y/n]: " "INPUT"
 
     if [[ -z "$INPUT" || ! "$INPUT" =~ ^[yYnN]$ ]]; then
         INPUT='y'
@@ -75,7 +75,7 @@ import { typeormConfig } from "../../configs/typeorm.config";
 
 @Module({
   imports: [ 
-  TypeOrmModule.forRoot(typeormConfig())
+    TypeOrmModule.forRoot(typeormConfig())
   ],
   controllers: [],
   providers: []
@@ -97,7 +97,9 @@ cd configs
 touch mongoose.config.ts
 
 cat << "EOF" > mongoose.config.ts
-export const mongooseConfig = () => {
+import { MongooseModuleOptions } from '@nestjs/mongoose';
+
+export const mongooseConfig = (): MongooseModuleOptions => {
   const {
     DB_HOST,
     DB_PORT,
@@ -115,7 +117,7 @@ export const mongooseConfig = () => {
   return {
     uri,
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   };
 };
 EOF
@@ -129,12 +131,10 @@ import { mongooseConfig } from '../../configs/mongoose.config';
 
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      useFactory: mongooseConfig,
-    }),
+    MongooseModule.forRoot(mongooseConfig())
   ],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}
 DOF
@@ -185,7 +185,7 @@ import { mikroOrmConfig } from '../../configs/mikro-orm.config';
 
 @Module({
   imports: [
-    MikroOrmModule.forRoot(mikroOrmConfig()),
+    MikroOrmModule.forRoot(mikroOrmConfig())
   ],
   controllers: [],
   providers: [],
@@ -259,6 +259,40 @@ function configSqlite(){
       sed -i "15d;5d" configs/typeorm.config.ts
       ;;
   esac
+
+  return 0
+}
+
+function configRedis(){
+  
+touch configs/redis.config.ts
+
+cat << EOF > configs/redis.config.ts
+import { RedisModuleOptions } from "@nestjs-modules/ioredis";
+
+export default (): RedisModuleOptions => {
+  return {
+    type: "single",
+    options: {
+      host: process.env.REDIS_HOST,
+      port: +process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
+    },
+  };
+};
+EOF
+
+
+if [ "$CHOICE_ORMS" != "No database" ]; then
+  # sed -i "4d" "modules/app/app.module.ts"
+  # sed -i '  imports: [\n    RedisModule.forRoot(redisConfig())\n  ],' "modules/app/app.module.ts"
+  sed -i "2a\\import { RedisModule } from '@nestjs-modules/ioredis';\nimport redisConfig from './configs/redis.config';" modules/app/app.module.ts
+else
+  sed -i '7s/$/,/;8i\    RedisModule.forRoot(redisConfig())' "modules/app/app.module.ts"
+
+fi
+
+INSTALL_PACKAGES+=("@nestjs-modules/ioredis")
 
   return 0
 }
