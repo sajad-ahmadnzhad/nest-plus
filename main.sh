@@ -5,8 +5,6 @@ GREEN='\e[32m'
 YELLOW='\e[33m'
 BLUE='\e[34m'
 RESET='\e[0m'
-READ_BLUE_COLOR=$(tput setaf 4)
-READ_REST_COLOR_CMD=$(tput sgr0)
 
 IS_INSTALL_FZF=$(command -v fzf)
 if [ $? != 0 ]; then
@@ -14,13 +12,13 @@ if [ $? != 0 ]; then
 example for linux: sudo apt install fzf
 example for macos: brew install fzf
 ${RESET}"
-
-read -p "${READ_BLUE_COLOR}Plase enter command for install fzf: ${READ_REST_COLOR_CMD}" "COMMAND"
+echo $$
+read -p "$(echo -e ${RED}Please enter command for isntall fzf: ${RESET})" "COMMAND"
 command $COMMAND
 echo -e "${GREEN}fzf installed successfully${RESET}"
 fi
 
-read -t 10 -p "${READ_BLUE_COLOR}Enter project name${READ_REST_COLOR_CMD}: " "PROJECT_NAME"
+read -t 10 -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
 
 npx nest new $PROJECT_NAME --skip-install
 if [ $? -eq 0 ]; then
@@ -53,7 +51,7 @@ EOF
     changeAppModule
     changeMainFile
 
-    yesOrNo "prettierrc and eslintrc.js be removed?"
+    yesOrNo "$(echo -e "${YELLOW}prettierrc and eslintrc.js be removed?${RESET}")"
 
     if [ $INPUT = "y" ]; then 
     rm .eslintrc.js
@@ -61,7 +59,7 @@ EOF
     sed -i "10d;15d;37,41d;43d" package.json
     fi
 
-    yesOrNo "Test files are deleted?"
+    yesOrNo $(echo -e "${YELLOW}Test files are deleted?${RESET}")
 
     if [ $INPUT = "y" -a -d "test" ]; then
         rm -rf 'test'
@@ -84,23 +82,23 @@ EOF
             "TypeORM")
             cd src
             generateTypeorm
-            echo "Generated typeorm configs successfully."
+            echo -e "${GREEN}Generated typeorm configs successfully.${RESET}"
              ;;
              "MicroORM")
              cd src
              generateMicroOrm
-             echo "Generated microOrm configs successfully."
+             echo -e "${GREEN}Generated microOrm configs successfully."
              ;;
              "Mongoose")
              cd src
              generateMongoose
-             echo "Generated mongoose configs successfully."
+             echo -e "${GREEN}Generated mongoose configs successfully.${RESET}"
              ;;
              "No Database")
-             echo "no database selected"
+             echo -e "${YELLOW}no database selected${RESET}"
              ;;
              *)
-             echo "Not found item"
+             echo "${RED}Not found item${RESET}"
              ;;
         esac
 
@@ -110,58 +108,37 @@ EOF
     case $CHOICE_DB in 
         "Mysql")
         configMysql
-        echo "Mysql was set as the database"
+        echo -e "${GREEN}Mysql was set as the database${RESET}"
         ;;
         "Postgresql")
         configPostgresql
-        echo "Postgresql was set as the database"
+        echo -e "${GREEN}Postgresql was set as the database${RESET}"
         ;;
         "Mariadb")
         configMariadb
-        echo "Maria was set as the database"
+        echo -e "${GREEN}Maria was set as the database${RESET}"
         ;;
         "Sqlite")
         configSqlite
-        echo "Sqlite was set as the database"
+        echo -e "${GREEN}Sqlite was set as the database${RESET}"
         ;;
         *)
-        echo "No db selected"
+        echo -e "${RED}No db selected${RESET}"
         exit 1
     esac
 
     fi
 
     else 
-        ceho "No item was selected"
+        ceho -e "${RED}No item was selected${RESET}"
         exit 1
     fi
 
-    yesOrNo "Need more options?"
-
-    if [ $INPUT = 'y' ]; then 
-        CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
-        case $CHOICE_REDIS in 
-            "Redis")
-            cd src
-            configRedis
-            echo "generated redis configs successfully"
-            ;;
-            "Redis cache manager")
-            echo "generated redis cache manager configs successfully"
-            ;;
-            "No redis")
-            echo "No redis selected"
-            ;;
-            *)
-            echo "Not found item"
-        esac
-    fi
-
     cd ..
-    echo "Plase wait for downloading packages....."
+    echo -e "${BLUE}Plase wait for downloading packages.....${RESET}"
     npx yarn install
-    echo "Wait for downloading ${INSTALL_PACKAGES[@]}....."
+    echo -e "${BLUE}Wait for downloading ${INSTALL_PACKAGES[@]}.....${RESET}"
     npx yarn add "${INSTALL_PACKAGES[@]}"
-    echo "Thanks for using nest-plus"
+    echo -e "${GREEN}Thanks for using nest-plus${RESET}"
 fi
 
