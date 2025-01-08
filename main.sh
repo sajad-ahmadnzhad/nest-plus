@@ -34,14 +34,12 @@ if [ $? -eq 0 ]; then
 
     source utils.sh
     cd "$PROJECT_NAME/src"
-    mkdir "common"
-    mkdir "configs"
-    mkdir "modules"
-    mkdir "modules/app"
-    rm app.controller.ts
-    rm app.service.ts
+    mkdir common configs modules modules/app
+    rm app.controller.ts app.service.ts
     mv app.module.ts modules/app
-    cd "../"
+    cd common
+    mkdir pipes filters guards middlewares enums decorators utils
+    cd "../../"
     touch .env
     touch .env.example
 
