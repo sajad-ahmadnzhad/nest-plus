@@ -137,6 +137,26 @@ EOF
         exit 1
     fi
 
+        yesOrNo "Need more options?"
+
+    if [ $INPUT = 'y' ]; then 
+        CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
+        case $CHOICE_REDIS in 
+            "Redis")
+            configRedis
+            echo -e "${GREEN}generated redis configs successfully${RESET}"
+            ;;
+            "Redis cache manager")
+            echo -e "${GREEN}generated redis cache manager configs successfully${RESET}"
+            ;;
+            "No redis")
+            echo -e "${YELLOW}No redis selected${RESET}"
+            ;;
+            *)
+            echo "${RED}Not found item${RESET}"
+        esac
+    fi
+
     cd ..
     echo -e "${BLUE}Please wait for installing packages.....${RESET}"
     npx yarn install
