@@ -23,15 +23,17 @@ fi
 echo -e "${GREEN}fzf installed successfully${RESET}"
 fi
 
-read -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
+
+while true; do
+    read -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
+    if [ -z "$PROJECT_NAME" ]; then
+        echo -e "${RED}Project name is required${RESET}"
+    else break
+    fi
+done
 
 npx nest new $PROJECT_NAME --skip-install
 if [ $? -eq 0 ]; then
-
-    if [ ! "$PROJECT_NAME" ]; then
-        PROJECT_NAME="nest-app"
-    fi
-
     source utils.sh
     cd "$PROJECT_NAME/src"
     mkdir common configs modules modules/app
@@ -165,10 +167,11 @@ EOF
     addConfigModule
     manageEnvFile
     cd ..
-    echo -e "${BLUE}Please wait for installing packages.....${RESET}"
-    npx yarn install
-    echo -e "${BLUE}Wait for installing ${INSTALL_PACKAGES[@]}.....${RESET}"
-    npx yarn add "${INSTALL_PACKAGES[@]}"
+    echo -e "${BLUE}Please Wait for installing ${INSTALL_PACKAGES[@]}.....${RESET}"
+    npm install "${INSTALL_PACKAGES[@]}"
+
+    echo -e "${BLUE}Wait for installing other packages.....${RESET}"
+    npm install
     echo -e "${GREEN}Thanks for using nest-plus${RESET}"
 fi
 
