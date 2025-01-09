@@ -302,6 +302,8 @@ else
 
 fi
 
+sed -i '2i \\#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
+
 INSTALL_PACKAGES+=("@nestjs-modules/ioredis")
 
   return 0
@@ -387,6 +389,9 @@ else
   sed -i '2i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
 fi
 
+sed -i '2a \\n#Redis cache manager configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
+
+
 INSTALL_PACKAGES+=("@nestjs/cache-manager" "cache-manager-redis-yet")
 
 return 0
@@ -397,5 +402,13 @@ function addConfigModule() {
   sed -i '/imports: \[/a \ \ \ \ ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),' modules/app/app.module.ts
 
   INSTALL_PACKAGES+=("@nestjs/config")
+  return 0
+}
+
+function manageEnvFile(){ 
+  
+cat ../.env > ../.env.example
+sed -i 's/=\(.*\)$/=/' ../.env.example
+
   return 0
 }

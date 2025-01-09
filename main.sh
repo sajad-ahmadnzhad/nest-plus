@@ -1,10 +1,5 @@
 #!/bin/bash
 
-source utils.sh
-cd data/src
-generateMongoose
-exit 1
-
 RED='\e[31m'
 GREEN='\e[32m'
 YELLOW='\e[33m'
@@ -168,6 +163,7 @@ EOF
       fi
     
     addConfigModule
+    manageEnvFile
     cd ..
     echo -e "${BLUE}Please wait for installing packages.....${RESET}"
     npx yarn install
