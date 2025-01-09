@@ -284,11 +284,11 @@ EOF
 
 
 if [ "$CHOICE_ORMS" != "No database" ]; then
-  # sed -i "4d" "modules/app/app.module.ts"
-  # sed -i '  imports: [\n    RedisModule.forRoot(redisConfig())\n  ],' "modules/app/app.module.ts"
-  sed -i "2a\\import { RedisModule } from '@nestjs-modules/ioredis';\nimport redisConfig from './configs/redis.config';" modules/app/app.module.ts
+  sed -i '4c\\  imports: [\n    RedisModule.forRoot(redisConfig())\n  ],' "modules/app/app.module.ts"
+  sed -i '1a\import { RedisModule } from "@nestjs-modules/ioredis";\nimport redisConfig from "../../configs/redis.config";' modules/app/app.module.ts
 else
-  sed -i '7s/$/,/;8i\    RedisModule.forRoot(redisConfig())' "modules/app/app.module.ts"
+  sed -i '2a\import { RedisModule } from "@nestjs-modules/ioredis";\nimport redisConfig from "../../configs/redis.config";' modules/app/app.module.ts
+  sed -i '9s/$/,/;10i\    RedisModule.forRoot(redisConfig())' "modules/app/app.module.ts"
 
 fi
 

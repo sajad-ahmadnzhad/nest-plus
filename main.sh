@@ -1,5 +1,10 @@
 #!/bin/bash
 
+source utils.sh
+cd data/src
+configRedis
+exit 1
+
 RED='\e[31m'
 GREEN='\e[32m'
 YELLOW='\e[33m'
