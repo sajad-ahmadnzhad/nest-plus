@@ -2,7 +2,7 @@
 
 source utils.sh
 cd data/src
-configRedis
+redisCacheManagerConfig
 exit 1
 
 RED='\e[31m'
@@ -17,7 +17,7 @@ if [ $? != 0 ]; then
 example for linux: sudo apt install fzf
 example for macos: brew install fzf
 ${RESET}"
-read -p "$(echo -e ${BLUE}Please enter command for isntall fzf: ${RESET})" "COMMAND"
+read -p "$(echo -e ${BLUE}Please enter command for install fzf: ${RESET})" "COMMAND"
 command $COMMAND
 
 if [ $? != 0 ]; then
@@ -138,7 +138,7 @@ EOF
     fi
 
     else 
-        ceho -e "${RED}No item was selected${RESET}"
+        echo -e "${RED}No item was selected${RESET}"
         exit 1
     fi
 
@@ -152,6 +152,7 @@ EOF
             echo -e "${GREEN}generated redis configs successfully${RESET}"
             ;;
             "Redis cache manager")
+            redisCacheManagerConfig
             echo -e "${GREEN}generated redis cache manager configs successfully${RESET}"
             ;;
             "No redis")
@@ -166,7 +167,7 @@ EOF
       
       if [ $INPUT = 'y' ]; then
         configSwagger
-        echo -e "${GREEN}generated swaager configs successfully${RESET}"
+        echo -e "${GREEN}generated swagger configs successfully${RESET}"
       fi
     
 

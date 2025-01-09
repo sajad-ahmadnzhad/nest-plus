@@ -342,3 +342,42 @@ INSTALL_PACKAGES+=("@nestjs/swagger")
 
   return 0
 }
+
+function redisCacheManagerConfig() {
+  touch configs/cache.config.ts
+
+cat << EOF > configs/cache.config.ts
+import { CacheModuleAsyncOptions } from "@nestjs/cache-manager";
+import { redisStore } from "cache-manager-redis-yet";
+
+export const cacheConfig = (): CacheModuleAsyncOptions => {
+  return {
+    isGlobal: true,
+    async useFactory() {
+      const store = await redisStore({
+        socket: {
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT),
+        },
+        password: process.env.REDIS_PASSWORD,
+      });
+
+      return { store };
+    },
+  };
+};
+EOF
+
+if [ "$CHOICE_ORMS" = "No database" ]; then
+  sed -i '3i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
+  sed -i '9s/$/,/' modules/app/app.module.ts
+  sed -i '10i \\    CacheModule.registerAsync(cacheConfig())' modules/app/app.module.ts
+else
+  sed -i '4c \  imports: [\n    CacheModule.registerAsync(cacheConfig())\n  ],' modules/app/app.module.ts
+  sed -i '2i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
+fi
+
+INSTALL_PACKAGES+=("@nestjs/cache-manager" "cache-manager-redis-yet")
+
+return 0
+}
