@@ -141,6 +141,8 @@ DOF
 
 cd ../
 
+sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=\nDB_PASSWORD=\n" ../.env
+
 INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
 
   return 0
@@ -214,6 +216,8 @@ function configMysql(){
       ;;
   esac
 
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
+
   return 0
 }
 
@@ -227,6 +231,8 @@ function configPostgresql(){
       INSTALL_PACKAGES+=("@mikro-orm/postgresql" "pg")
       ;;
   esac
+
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\n' ../.env
 
   return 0
 }
@@ -242,6 +248,8 @@ function configMariadb(){
       sed -i "14s/postgresql/mariadb/" configs/microOrm.config.ts
       ;;
   esac
+
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
 
   return 0
 }
@@ -259,6 +267,8 @@ function configSqlite(){
       sed -i "15d;5d" configs/typeorm.config.ts
       ;;
   esac
+
+sed -i '1i \\#Database configs\nDB_PORT=8191\nDB_NAME=sqlite\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
 
   return 0
 }
@@ -368,7 +378,7 @@ export const cacheConfig = (): CacheModuleAsyncOptions => {
 };
 EOF
 
-if [ "$CHOICE_ORMS" = "No database" ]; then
+if [ "$CHOICE_ORMS" != "No database" ]; then
   sed -i '3i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
   sed -i '9s/$/,/' modules/app/app.module.ts
   sed -i '10i \\    CacheModule.registerAsync(cacheConfig())' modules/app/app.module.ts

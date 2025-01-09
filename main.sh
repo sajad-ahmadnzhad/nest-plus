@@ -2,7 +2,7 @@
 
 source utils.sh
 cd data/src
-addConfigModule
+generateMongoose
 exit 1
 
 RED='\e[31m'
@@ -49,13 +49,10 @@ if [ $? -eq 0 ]; then
     touch .env.example
 
 cat << EOF > ".env"
+#Application configs
 PORT=4000
 EOF
 
-cat << EOF > ".env.example"
-#Application configs
-PORT=
-EOF
     changeAppModule
     changeMainFile
 
@@ -170,7 +167,7 @@ EOF
         echo -e "${GREEN}generated swagger configs successfully${RESET}"
       fi
     
-
+    addConfigModule
     cd ..
     echo -e "${BLUE}Please wait for installing packages.....${RESET}"
     npx yarn install
