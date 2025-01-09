@@ -32,7 +32,17 @@ while true; do
     fi
 done
 
-npx nest new $PROJECT_NAME --skip-install
+OUTPUT=$(npx nest new "$PROJECT_NAME" --skip-install 2>&1 | tee /dev/tty)
+
+CLEAN_OUTPUT=$(echo "$OUTPUT" | sed 's/\x1B\[[0-9;]*[a-zA-Z]//g')
+
+PACKAGE_MANAGER=$(echo "$CLEAN_OUTPUT" | grep -oP "(?<=Which package manager would you ❤️  to use\\? ).*" | tail -1)
+
+if [[ ! -n "$PACKAGE_MANAGER" ]]; then
+    echo -e "${RED}no package manager selected.${RESET}"
+    exit 1
+fi
+
 if [ $? -eq 0 ]; then
     source utils.sh
     cd "$PROJECT_NAME/src"
@@ -77,7 +87,7 @@ EOF
 
     fi
     INSTALL_PACKAGES=()
-    CHOICE_ORMS=$(printf "TypeORM\nMicroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
+    CHOICE_ORMS=$(printf "TypeORM\nMikroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
     if [ -n "$CHOICE_ORMS" ]; then
         case $CHOICE_ORMS in 
@@ -86,10 +96,10 @@ EOF
             generateTypeorm
             echo -e "${GREEN}Generated typeorm configs successfully.${RESET}"
              ;;
-             "MicroORM")
+             "MikroORM")
              cd src
-             generateMicroOrm
-             echo -e "${GREEN}Generated microOrm configs successfully."
+             generateMikroOrm
+             echo -e "${GREEN}Generated mikroORM configs successfully."
              ;;
              "Mongoose")
              cd src
@@ -101,6 +111,7 @@ EOF
              ;;
              *)
              echo "${RED}Not found item${RESET}"
+             exit 1
              ;;
         esac
 
@@ -167,11 +178,20 @@ EOF
     addConfigModule
     manageEnvFile
     cd ..
-    echo -e "${BLUE}Please Wait for installing ${INSTALL_PACKAGES[@]}.....${RESET}"
-    npm install "${INSTALL_PACKAGES[@]}"
+    case $PACKAGE_MANAGER in 
+         "npm")
+         installPackages "npm install" "npm install" "npm run"
+         ;;
+         "yarn")
+         installPackages "npx yarn install" "npx yarn add" "npx yarn"
+         ;;
+         "pnpm") 
+         installPackages "npx pnpm install" "npx pnpm add" "npx pnpm"
+         ;;
+         *)
+         echo -e "${RED}Package manager not selected${RESET}"
+         exit 1
+    esac
 
-    echo -e "${BLUE}Wait for installing other packages.....${RESET}"
-    npm install
-    echo -e "${GREEN}Thanks for using nest-plus${RESET}"
 fi
 

@@ -148,12 +148,12 @@ INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
   return 0
 }
 
-function generateMicroOrm() {
+function generateMikroOrm() {
   
   cd configs
-  touch microOrm.config.ts
+  touch mikroOrm.config.ts
 
-cat << DOF > microOrm.config.ts
+cat << DOF > mikroOrm.config.ts
 import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 
 export const mikroOrmConfig = (): MikroOrmModuleOptions => {
@@ -183,7 +183,7 @@ cd "../modules"
 cat << DOF > app/app.module.ts
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { mikroOrmConfig } from '../../configs/mikro-orm.config';
+import { mikroOrmConfig } from '../../configs/mikroOrm.config';
 
 @Module({
   imports: [
@@ -197,7 +197,7 @@ DOF
 
 cd ../
 
-INSTALL_PACKAGES+=("@micro-orm/nestjs" "@mikro-orm/core")
+INSTALL_PACKAGES+=("@mikro-orm/nestjs" "@mikro-orm/core")
 
   return 0
 }
@@ -210,13 +210,13 @@ function configMysql(){
       INSTALL_PACKAGES+=("mysql2")
       sed -i '14s/postgres/mysql/' configs/typeorm.config.ts
       ;;
-      "MicroORM")
+      "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mysql" "mysql2")
-      sed -i '14s/postgresql/mysql/' configs/microOrm.config.ts
+      sed -i '14s/postgresql/mysql/' configs/mikroOrm.config.ts
       ;;
   esac
 
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -227,12 +227,12 @@ function configPostgresql(){
       "TypeORM")
       INSTALL_PACKAGES+=("pg")
       ;;
-      "MicroORM")
+      "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/postgresql" "pg")
       ;;
   esac
 
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\n' ../.env
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -243,13 +243,13 @@ function configMariadb(){
       INSTALL_PACKAGES+=("mariadb")
       sed -i "14s/postgres/mariadb/" configs/typeorm.config.ts
       ;;
-      "MicroORM")
+      "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mariadb" "mariadb")
-      sed -i "14s/postgresql/mariadb/" configs/microOrm.config.ts
+      sed -i "14s/postgresql/mariadb/" configs/mikroOrm.config.ts
       ;;
   esac
 
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
+sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -259,16 +259,16 @@ function configSqlite(){
       "TypeORM")
       INSTALL_PACKAGES+=("sqlite3")
       sed -i "14s/postgres/sqlite/" configs/typeorm.config.ts
-      sed -i "15d;5d" configs/typeorm.config.ts
+      sed -i "5,8d;15,18d" configs/typeorm.config.ts
       ;;
-      "MicroORM")
-      INSTALL_PACKAGES+=("@mikro-orm/sqlite" "sqlite3")
-      sed -i "14s/postgresql/sqlite/" configs/microOrm.config.ts
-      sed -i "15d;5d" configs/typeorm.config.ts
+      "MikroORM")
+      INSTALL_PACKAGES+=("@mikro-orm/sqlite")
+      sed -i "14s/postgresql/sqlite/" configs/mikroOrm.config.ts
+      sed -i "5,8d;15,18d" configs/mikroOrm.config.ts
       ;;
   esac
 
-sed -i '1i \\#Database configs\nDB_PORT=8191\nDB_NAME=sqlite\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
+sed -i "1i \\#Database configs\nDB_NAME=${PROJECT_NAME}.sqlite\nDB_SYNCHRONIZE=1\n" ../.env
 
   return 0
 }
@@ -302,7 +302,7 @@ else
 
 fi
 
-sed -i '2i \\#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
+sed -i '1i \#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
 
 INSTALL_PACKAGES+=("@nestjs-modules/ioredis")
 
@@ -389,7 +389,7 @@ else
   sed -i '2i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
 fi
 
-sed -i '2a \\n#Redis cache manager configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
+sed -i '1i \#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
 
 
 INSTALL_PACKAGES+=("@nestjs/cache-manager" "cache-manager-redis-yet")
@@ -410,5 +410,21 @@ function manageEnvFile(){
 cat ../.env > ../.env.example
 sed -i 's/=\(.*\)$/=/' ../.env.example
 
+  return 0
+}
+
+
+function installPackages(){
+  
+    echo -e "${BLUE}Wait for installing other packages.....${RESET}"
+    command $1
+
+    echo -e "${BLUE}Please Wait for installing ${INSTALL_PACKAGES[@]}.....${RESET}"
+    command $2 "${INSTALL_PACKAGES[@]}"
+
+    echo -e "${GREEN}Thanks for using nest-plus${RESET}"
+    echo -e "${BLUE}Starting project....${RESET}"
+    command $3 start:dev
+  
   return 0
 }
