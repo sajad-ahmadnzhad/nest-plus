@@ -2,7 +2,7 @@
 
 source utils.sh
 cd data/src
-redisCacheManagerConfig
+addConfigModule
 exit 1
 
 RED='\e[31m'

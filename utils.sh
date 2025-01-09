@@ -381,3 +381,11 @@ INSTALL_PACKAGES+=("@nestjs/cache-manager" "cache-manager-redis-yet")
 
 return 0
 }
+
+function addConfigModule() {
+  sed -i '2i \import { ConfigModule } from "@nestjs/config";' modules/app/app.module.ts
+  sed -i '/imports: \[/a \ \ \ \ ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),' modules/app/app.module.ts
+
+  INSTALL_PACKAGES+=("@nestjs/config")
+  return 0
+}
