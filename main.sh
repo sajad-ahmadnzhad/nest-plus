@@ -147,7 +147,7 @@ EOF
         exit 1
     fi
 
-        yesOrNo "$(echo -e "${BLUE}Need more options?"${RESET})"
+    yesOrNo "$(echo -e "${BLUE}Need more options?"${RESET})"
 
     if [ $INPUT = 'y' ]; then 
         CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
@@ -166,14 +166,16 @@ EOF
             *)
             echo -e "${RED}Not found item${RESET}"
         esac
-    fi
-
+        
         yesOrNo "$(echo -e "${BLUE}add swagger?${RESET}")"
       
-      if [ $INPUT = 'y' ]; then
-        configSwagger
-        echo -e "${GREEN}generated swagger configs successfully${RESET}"
-      fi
+         if [ $INPUT = 'y' ]; then
+            configSwagger
+            echo -e "${GREEN}generated swagger configs successfully${RESET}"
+        fi
+    
+    fi
+
     
     addConfigModule
     manageEnvFile

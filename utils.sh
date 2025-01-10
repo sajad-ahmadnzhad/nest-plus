@@ -97,9 +97,7 @@ cd configs
 touch mongoose.config.ts
 
 cat << "EOF" > mongoose.config.ts
-import { MongooseModuleOptions } from '@nestjs/mongoose';
-
-export const mongooseConfig = (): MongooseModuleOptions => {
+export const mongooseConfig = (): string => {
   const {
     DB_HOST,
     DB_PORT,
@@ -114,11 +112,7 @@ export const mongooseConfig = (): MongooseModuleOptions => {
     uri = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
   }
 
-  return {
-    uri,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  };
+  return uri
 };
 EOF
 
@@ -155,6 +149,7 @@ function generateMikroOrm() {
 
 cat << DOF > mikroOrm.config.ts
 import { MikroOrmModuleOptions } from '@mikro-orm/nestjs';
+import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 export const mikroOrmConfig = (): MikroOrmModuleOptions => {
   const {
@@ -163,17 +158,21 @@ export const mikroOrmConfig = (): MikroOrmModuleOptions => {
     DB_USERNAME,
     DB_PASSWORD,
     DB_NAME,
-    DB_SYNCHRONIZE,
   } = process.env;
 
   return {
-    type: 'postgresql',
+    driver: PostgreSqlDriver,
     host: DB_HOST,
     port: Number(DB_PORT),
     user: DB_USERNAME,
     password: DB_PASSWORD,
     dbName: DB_NAME,
-    synchronize: !!Number(DB_SYNCHRONIZE)
+    autoLoadEntities: false,
+    entities: ["./dist/**/*.entity.js"],
+    entitiesTs: ['./src/**/*.entity.ts'],
+    discovery: {
+      warnWhenNoEntities: false
+    }
   };
 };
 DOF
@@ -209,14 +208,15 @@ function configMysql(){
       "TypeORM")
       INSTALL_PACKAGES+=("mysql2")
       sed -i '14s/postgres/mysql/' configs/typeorm.config.ts
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\nSYNCHRONIZE=1\n' ../.env
       ;;
       "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mysql" "mysql2")
-      sed -i '14s/postgresql/mysql/' configs/mikroOrm.config.ts
+      sed -i "2c\import { MySqlDriver } from '@mikro-orm/mysql';" configs/mikroOrm.config.ts
+      sed -i "14c\    driver: MySqlDriver," configs/mikroOrm.config.ts
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
       ;;
   esac
-
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mysql\nDB_USERNAME=root\nDB_PASSWORD=\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -226,13 +226,13 @@ function configPostgresql(){
   case "$CHOICE_ORMS" in 
       "TypeORM")
       INSTALL_PACKAGES+=("pg")
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\nSYNCHRONIZE=1\n' ../.env
       ;;
       "MikroORM")
-      INSTALL_PACKAGES+=("@mikro-orm/postgresql" "pg")
+      INSTALL_PACKAGES+=("@mikro-orm/postgresql")
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\n' ../.env
       ;;
   esac
-
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=5432\nDB_NAME=postgres\nDB_USERNAME=postgres\nDB_PASSWORD=postgres\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -242,14 +242,16 @@ function configMariadb(){
       "TypeORM")
       INSTALL_PACKAGES+=("mariadb")
       sed -i "14s/postgres/mariadb/" configs/typeorm.config.ts
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\nSYNCHRONIZE=1\n' ../.env
       ;;
       "MikroORM")
-      INSTALL_PACKAGES+=("@mikro-orm/mariadb" "mariadb")
-      sed -i "14s/postgresql/mariadb/" configs/mikroOrm.config.ts
+      INSTALL_PACKAGES+=("@mikro-orm/mariadb")
+      sed -i "2c\import { MariaDbDriver } from '@mikro-orm/mariadb';" configs/mikroOrm.config.ts
+      sed -i "14c\    driver: MariaDbDriver," configs/mikroOrm.config.ts
+      sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\n' ../.env
       ;;
   esac
 
-sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\nDB_SYNCHRONIZE=1\n' ../.env
 
   return 0
 }
@@ -260,15 +262,15 @@ function configSqlite(){
       INSTALL_PACKAGES+=("sqlite3")
       sed -i "14s/postgres/sqlite/" configs/typeorm.config.ts
       sed -i "5,8d;15,18d" configs/typeorm.config.ts
+      sed -i "1i \\#Database configs\nDB_NAME=${PROJECT_NAME}.sqlite\nDB_SYNCHRONIZE=1\n" ../.env
       ;;
       "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/sqlite")
-      sed -i "14s/postgresql/sqlite/" configs/mikroOrm.config.ts
-      sed -i "5,8d;15,18d" configs/mikroOrm.config.ts
+      sed -i "2c \\import { SqliteDriver } from '@mikro-orm/sqlite';" configs/mikroOrm.config.ts
+      sed -i "6,9d;15,18d;14c\    driver: SqliteDriver," configs/mikroOrm.config.ts
+      sed -i "1i \\#Database configs\nDB_NAME=${PROJECT_NAME}.sqlite\n" ../.env
       ;;
   esac
-
-sed -i "1i \\#Database configs\nDB_NAME=${PROJECT_NAME}.sqlite\nDB_SYNCHRONIZE=1\n" ../.env
 
   return 0
 }
@@ -293,7 +295,7 @@ export default (): RedisModuleOptions => {
 EOF
 
 
-if [ "$CHOICE_ORMS" != "No database" ]; then
+if [ "$CHOICE_ORMS" = "No database" ]; then
   sed -i '4c\\  imports: [\n    RedisModule.forRoot(redisConfig())\n  ],' "modules/app/app.module.ts"
   sed -i '1a\import { RedisModule } from "@nestjs-modules/ioredis";\nimport redisConfig from "../../configs/redis.config";' modules/app/app.module.ts
 else
