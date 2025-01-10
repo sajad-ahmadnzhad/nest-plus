@@ -176,7 +176,6 @@ EOF
     
     fi
 
-    
     addConfigModule
     manageEnvFile
     cd ..
