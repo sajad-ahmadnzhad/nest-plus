@@ -4,7 +4,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/bash-powered-blue?style=flat-square" alt="Powered by Bash" />
   <img src="https://img.shields.io/badge/nestjs-framework-red?style=flat-square" alt="NestJS Framework" />
-  <img src="https://img.shields.io/github/license/your-repo/nest-plus?style=flat-square" alt="License" />
 </p>
 
 <hr />
@@ -28,7 +27,7 @@
 <h3>1. Choose Your ORM/ODM</h3>
 <p>Whether you prefer relational or non-relational databases, <strong>Nest-Plus</strong> has you covered! You can choose from:</p>
 <ul>
-  <li><strong>TypeORM:</strong> Perfect for SQL-based databases like PostgreSQL, MySQL, and SQLite.</li>
+  <li><strong>TypeORM:</strong> Perfect for SQL-based databases like PostgreSQL, MySQL, Mariadb, and SQLite.</li>
   <li><strong>MikroORM:</strong> Lightweight and flexible, ideal for SQL and NoSQL databases.</li>
   <li><strong>Mongoose:</strong> The go-to ODM for MongoDB.</li>
   <li><strong>No Database:</strong> Skip the database setup for lightweight projects or mock environments.</li>
@@ -39,6 +38,7 @@
 <ul>
   <li><strong>PostgreSQL</strong></li>
   <li><strong>MySQL</strong></li>
+  <li><strong>Mariadb</strong></li>
   <li><strong>SQLite</strong></li>
   <li><strong>MongoDB</strong></li>
 </ul>
@@ -113,11 +113,6 @@ chmod +x nest-plus.sh
 
 <h2>✨ Contributions</h2>
 <p>We ❤️ contributions! Found a bug? Have an idea for a new feature? Open an issue or submit a pull request.</p>
-
-<hr />
-
-<h2>📄 License</h2>
-<p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
 
 <hr />
 
