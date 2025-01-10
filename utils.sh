@@ -203,7 +203,6 @@ INSTALL_PACKAGES+=("@mikro-orm/nestjs" "@mikro-orm/core")
 
 
 function configMysql(){
-  
   case "$CHOICE_ORMS" in 
       "TypeORM")
       INSTALL_PACKAGES+=("mysql2")
@@ -276,7 +275,10 @@ function configSqlite(){
 }
 
 function configRedis(){
-  
+  if [ $(basename $PWD) != "src" ]; then
+    cd src
+  fi
+
 touch configs/redis.config.ts
 
 cat << EOF > configs/redis.config.ts
@@ -294,14 +296,12 @@ export default (): RedisModuleOptions => {
 };
 EOF
 
-
-if [ "$CHOICE_ORMS" = "No database" ]; then
+if [ "$CHOICE_ORMS" = "No Database" ]; then
   sed -i '4c\\  imports: [\n    RedisModule.forRoot(redisConfig())\n  ],' "modules/app/app.module.ts"
   sed -i '1a\import { RedisModule } from "@nestjs-modules/ioredis";\nimport redisConfig from "../../configs/redis.config";' modules/app/app.module.ts
 else
   sed -i '2a\import { RedisModule } from "@nestjs-modules/ioredis";\nimport redisConfig from "../../configs/redis.config";' modules/app/app.module.ts
   sed -i '9s/$/,/;10i\    RedisModule.forRoot(redisConfig())' "modules/app/app.module.ts"
-
 fi
 
 sed -i '1i \#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
@@ -313,6 +313,10 @@ INSTALL_PACKAGES+=("@nestjs-modules/ioredis")
 
 
 function configSwagger(){ 
+  if [ $(basename $PWD) != "src" ]; then
+    cd src
+  fi
+
 touch configs/swagger.config.ts
 
 cat << EOF > configs/swagger.config.ts
@@ -358,6 +362,10 @@ INSTALL_PACKAGES+=("@nestjs/swagger")
 }
 
 function redisCacheManagerConfig() {
+  if [ $(basename $PWD) != "src" ]; then
+    cd src
+  fi
+
   touch configs/cache.config.ts
 
 cat << EOF > configs/cache.config.ts
@@ -382,7 +390,7 @@ export const cacheConfig = (): CacheModuleAsyncOptions => {
 };
 EOF
 
-if [ "$CHOICE_ORMS" != "No database" ]; then
+if [ "$CHOICE_ORMS" != "No Database" ]; then
   sed -i '3i \\import { CacheModule } from "@nestjs/cache-manager";\nimport { cacheConfig } from "../../configs/cache.config";' modules/app/app.module.ts
   sed -i '9s/$/,/' modules/app/app.module.ts
   sed -i '10i \\    CacheModule.registerAsync(cacheConfig())' modules/app/app.module.ts
@@ -403,8 +411,17 @@ function addConfigModule() {
   if [ $(basename $PWD) != "src" ]; then
     cd src
   fi
-  sed -i '2i \import { ConfigModule } from "@nestjs/config";' modules/app/app.module.ts
+
+local LINE=$(sed -n '4p' modules/app/app.module.ts | tr -d '[:space:]') 
+local EXPECTED="imports:[],"
+
+if [ "$LINE" == "$EXPECTED" ]; then
+  sed -i '4d;5c\\   imports:[\n     ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),\n  ],' modules/app/app.module.ts
+else
   sed -i '/imports: \[/a \ \ \ \ ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),' modules/app/app.module.ts
+fi
+
+  sed -i '2i \import { ConfigModule } from "@nestjs/config";' modules/app/app.module.ts
 
   INSTALL_PACKAGES+=("@nestjs/config")
   return 0
@@ -461,4 +478,3 @@ function installPackages() {
   echo -e "${BLUE}Starting project....${RESET}"
   command $3 "start:dev"
 }
-

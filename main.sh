@@ -1,4 +1,5 @@
 #!/bin/bash
+source utils.sh
 
 RED='\e[31m'
 GREEN='\e[32m'
@@ -26,6 +27,7 @@ fi
 
 while true; do
     read -p "$(echo -e "${BLUE}Please enter project name: ${RESET}")" "PROJECT_NAME"
+    PROJECT_NAME=$(echo "$PROJECT_NAME" | cut -d' ' -f1)
     if [ -z "$PROJECT_NAME" ]; then
         echo -e "${RED}Project name is required${RESET}"
     else break
@@ -44,7 +46,6 @@ if [[ ! -n "$PACKAGE_MANAGER" ]]; then
 fi
 
 if [ $? -eq 0 ]; then
-    source utils.sh
     cd "$PROJECT_NAME/src"
     mkdir common configs modules modules/app
     rm app.controller.ts app.service.ts
