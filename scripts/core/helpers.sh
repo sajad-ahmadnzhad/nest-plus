@@ -25,6 +25,8 @@ if [[ ! -n "$PACKAGE_MANAGER" ]]; then
     exit 1
 fi
 
+cd "$PROJECT_NAME"
+
 return 0
 }
 
@@ -44,4 +46,15 @@ while true; do
 done
 
 return 0
+}
+
+# Setup env files
+function setup_envs(){
+    touch .env
+    touch .env.example
+
+cat << EOF > ".env"
+#Application configs
+PORT=4000
+EOF
 }
