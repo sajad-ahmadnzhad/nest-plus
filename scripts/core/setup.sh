@@ -9,3 +9,9 @@ get_package_manager $PROJECT_NAME
 
 # Setup env files
 setup_envs
+
+# Generate modular folder structure
+bash generate_structure.sh
+
+# Setup base appModule
+setupAppModule

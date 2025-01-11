@@ -59,3 +59,17 @@ cat << EOF > ".env"
 PORT=4000
 EOF
 }
+
+function setupAppModule() {
+cat << 'EOF' > src/modules/app/app.module.ts
+import { Module } from '@nestjs/common';
+
+@Module({
+    imports: [],
+    controllers: [],
+    providers: []
+})
+export class AppModule {}
+EOF
+    return 0
+}
