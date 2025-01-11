@@ -53,6 +53,7 @@ function setup_envs(){
     touch .env
     touch .env.example
 
+# Add default envs
 cat << EOF > ".env"
 #Application configs
 PORT=4000
