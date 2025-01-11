@@ -1,23 +1,24 @@
 #!/bin/bash
+source database_setup.sh
 
 if [[ "$CHOICE_ORMS" != "No Database" && "$CHOICE_ORMS" != "Mongoose" ]]; then
 CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite" | fzf --prompt="Select database: ")
 
 case $CHOICE_DB in 
     "Mysql")
-    configMysql
+    setupMysqlConfig
     echo -e "${GREEN}Mysql was set as the database${RESET}"
     ;;
     "Postgresql")
-    configPostgresql
+    setupPostgresqlConfig
     echo -e "${GREEN}Postgresql was set as the database${RESET}"
     ;;
     "Mariadb")
-    configMariadb
+    setupMariadbConfig
     echo -e "${GREEN}Maria was set as the database${RESET}"
     ;;
     "Sqlite")
-    configSqlite
+    setupSqliteConfig
     echo -e "${GREEN}Sqlite was set as the database${RESET}"
     ;;
     *)
