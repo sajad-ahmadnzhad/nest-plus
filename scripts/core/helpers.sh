@@ -60,6 +60,7 @@ PORT=4000
 EOF
 }
 
+# Setup base app module
 function setupAppModule() {
 cat << 'EOF' > src/modules/app/app.module.ts
 import { Module } from '@nestjs/common';
@@ -72,4 +73,11 @@ import { Module } from '@nestjs/common';
 export class AppModule {}
 EOF
     return 0
+}
+
+# Updates the path of the main application file
+function modifyMainFile(){
+  sed -i "2s/app.module/modules\/app\/app.module/" "src/main.ts"
+
+  return 0
 }

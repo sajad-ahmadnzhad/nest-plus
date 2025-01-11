@@ -15,3 +15,7 @@ bash generate_structure.sh
 
 # Setup base appModule
 setupAppModule
+
+# Updates the path of the main application file
+modifyMainFile
+
