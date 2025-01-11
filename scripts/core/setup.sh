@@ -34,3 +34,5 @@ bash ../features/other_selection.sh
 setupConfigModule
 
 manageEnvFile
+
+bash ../features/install_dependencies_selection.sh
