@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../core/orm_helpers.sh
+source ./orm_setup.sh
 
 # This script prompts the user to select an ORM/ODM from a list using fzf.
 CHOICE_ORMS=$(printf "TypeORM\nMikroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
