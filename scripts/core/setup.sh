@@ -25,4 +25,7 @@ removePrettierAndESLint
 # Removes Test configuration files.
 removeTestFiles
 
+
 bash ../features/orm_selection.sh
+
+bash ../features/database_selection.sh
