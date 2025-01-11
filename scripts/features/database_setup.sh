@@ -49,7 +49,6 @@ function setupMariadbConfig(){
       ;;
   esac
 
-
   return 0
 }
 

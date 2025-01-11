@@ -121,3 +121,35 @@ fi
 
 return 0
 }
+
+function setupConfigModule() {
+cd src
+local LINE=$(sed -n '4p' modules/app/app.module.ts | tr -d '[:space:]') 
+local EXPECTED="imports:[],"
+
+if [ "$LINE" == "$EXPECTED" ]; then
+  sed -i '4d;5c\\   imports:[\n     ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),\n  ],' modules/app/app.module.ts
+else
+  sed -i '/imports: \[/a \ \ \ \ ConfigModule.forRoot({\n      isGlobal: true,\n      envFilePath: `${process.cwd()}/.env`,\n    }),' modules/app/app.module.ts
+fi
+
+sed -i '2i \import { ConfigModule } from "@nestjs/config";' modules/app/app.module.ts
+
+INSTALL_PACKAGES+=("@nestjs/config")
+
+cd ..
+
+  return 0
+}
+
+function manageEnvFile() {
+cd src
+
+cat ../.env > ../.env.example
+sed -i 's/=\(.*\)$/=/' ../.env.example
+
+cd ..
+
+  return 0
+}
+

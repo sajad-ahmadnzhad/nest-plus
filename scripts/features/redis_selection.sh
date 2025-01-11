@@ -1,5 +1,4 @@
 #!/bin/bash
-source ../user_prompts/questions.sh
 
 CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
 case $CHOICE_REDIS in 
