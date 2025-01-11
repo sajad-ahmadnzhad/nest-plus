@@ -29,3 +29,5 @@ removeTestFiles
 bash ../features/orm_selection.sh
 
 bash ../features/database_selection.sh
+
+bash ../features/other_selection.sh
