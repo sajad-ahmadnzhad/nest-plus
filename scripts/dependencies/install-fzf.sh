@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../core/helpers.sh
+source scripts/core/helpers.sh  
 
 IS_INSTALL_FZF=$(command -v fzf)
 

@@ -1,5 +1,7 @@
 #!/bin/bash
-source helpers.sh
+source scripts/core/helpers.sh
+
+bash scripts/dependencies/install-fzf.sh
 
 # Get project name form user
 get_project_name
@@ -11,7 +13,7 @@ get_package_manager $PROJECT_NAME
 setup_envs
 
 # Generate modular folder structure
-bash generate_structure.sh
+bash scripts/core/generate_structure.sh
 
 # Setup base appModule
 setupAppModule
@@ -25,14 +27,14 @@ removePrettierAndESLint
 # Removes Test configuration files.
 removeTestFiles
 
-bash ../features/orm_selection.sh
+bash scripts/features/orm_selection.sh
 
-bash ../features/database_selection.sh
+bash scripts/features/database_selection.sh
 
-bash ../features/other_selection.sh
+bash scripts/features/other_selection.sh
 
 setupConfigModule
 
 manageEnvFile
 
-bash ../features/install_dependencies_selection.sh
+bash scripts/features/install_dependencies_selection.sh

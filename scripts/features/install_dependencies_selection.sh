@@ -1,5 +1,5 @@
 #!/bin/bash
-source install_dependencies_setup.sh
+source scripts/features/install_dependencies_setup.sh
 
 case $PACKAGE_MANAGER in 
     "npm")

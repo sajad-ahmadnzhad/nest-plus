@@ -1,5 +1,5 @@
 #!/bin/bash
-source ../user_prompts/question.sh
+source scripts/user_prompts/questions.sh
 
 # Color for messages
 RED='\e[31m'
