@@ -1,6 +1,7 @@
 #!/bin/bash
 source ../core/orm_helpers.sh
 
+# This script prompts the user to select an ORM/ODM from a list using fzf.
 CHOICE_ORMS=$(printf "TypeORM\nMikroORM\nMongoose\nNo Database" | fzf --prompt="Select ORM or ODM: ")
 
 if [ -n "$CHOICE_ORMS" ]; then
@@ -10,11 +11,11 @@ if [ -n "$CHOICE_ORMS" ]; then
          echo -e "${GREEN}Generated typeorm configs successfully.${RESET}"
          ;;
          "MikroORM")
-         generateMikroOrm
+         setupMikroOrmConfig
          echo -e "${GREEN}Generated mikroORM configs successfully."
          ;;
          "Mongoose")
-         generateMongoose
+         setupMongooseConfig
          echo -e "${GREEN}Generated mongoose configs successfully.${RESET}"
          ;;
          "No Database")
