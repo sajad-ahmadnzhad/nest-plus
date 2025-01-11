@@ -19,3 +19,6 @@ setupAppModule
 # Updates the path of the main application file
 modifyMainFile
 
+# Removes ESLint and Prettier configuration files.
+removePrettierAndESLint
+

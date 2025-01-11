@@ -1,4 +1,5 @@
 #!/bin/bash
+source ../user_prompts/question.sh
 
 # Color for messages
 RED='\e[31m'
@@ -80,4 +81,38 @@ function modifyMainFile(){
   sed -i "2s/app.module/modules\/app\/app.module/" "src/main.ts"
 
   return 0
+}
+
+# Removes ESLint and Prettier configuration files and updates the package.json.
+function removePrettierAndESLint(){
+promptYesOrNo "$(echo -e "${YELLOW}prettierrc and eslintrc.js be removed?${RESET}")"
+
+if [ $INPUT = "y" ]; then 
+    rm .eslintrc.js
+    rm .prettierrc
+    # Remove lines from package.json
+    sed -i "10d;15d;37,41d;43d" package.json
+fi
+
+return 0
+}
+
+function removeTestFiles(){
+promptYesOrNo "$(echo -e "${YELLOW}Test files are deleted?${RESET}")"
+
+if [ $INPUT = "y" -a -d "test" ]; then
+    rm -rf 'test'
+    rm src/app.controller.spec.ts
+
+    if [ -f ".eslintrc.js" -a -f ".prettierrc" ]; then
+        sed -i "16,20d;32d;34d;36d;42d;45,46d;52,68d" package.json
+        sed -i "15s/,$//;40s/,$//" package.json
+    else 
+        sed -i "14,18d;30d;32d;34,35d;37,38d;44,60d" package.json
+        sed -i "13s/,$//;32s/,$//" package.json
+    fi
+
+fi
+
+return 0
 }
