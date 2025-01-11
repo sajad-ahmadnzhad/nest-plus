@@ -22,3 +22,7 @@ modifyMainFile
 # Removes ESLint and Prettier configuration files.
 removePrettierAndESLint
 
+# Removes Test configuration files.
+removeTestFiles
+
+bash ../features/orm_selection.sh

@@ -12,6 +12,9 @@ RESET='\e[0m'
 function get_package_manager(){
 local $PROJECT_NAME=$1
 
+# Array to hold the names of packages to be installed in the future
+INSTALL_PACKAGES=()
+
 # Create a new NestJS project with the specified name and save the output
 local OUTPUT=$(npx nest new "$PROJECT_NAME" --skip-install 2>&1 | tee /dev/tty)
 
@@ -97,20 +100,22 @@ fi
 return 0
 }
 
+# Removes Test configuration files and updates the package.json.
 function removeTestFiles(){
 promptYesOrNo "$(echo -e "${YELLOW}Test files are deleted?${RESET}")"
 
 if [ $INPUT = "y" -a -d "test" ]; then
-    rm -rf 'test'
-    rm src/app.controller.spec.ts
+rm -rf 'test'
+rm src/app.controller.spec.ts
 
-    if [ -f ".eslintrc.js" -a -f ".prettierrc" ]; then
-        sed -i "16,20d;32d;34d;36d;42d;45,46d;52,68d" package.json
-        sed -i "15s/,$//;40s/,$//" package.json
-    else 
-        sed -i "14,18d;30d;32d;34,35d;37,38d;44,60d" package.json
-        sed -i "13s/,$//;32s/,$//" package.json
-    fi
+# Remove specific lines from package.json based on the presence of .eslintrc.js and .prettierrc files
+if [ -f ".eslintrc.js" -a -f ".prettierrc" ]; then
+    sed -i "16,20d;32d;34d;36d;42d;45,46d;52,68d" package.json
+    sed -i "15s/,$//;40s/,$//" package.json
+else 
+    sed -i "14,18d;30d;32d;34,35d;37,38d;44,60d" package.json
+    sed -i "13s/,$//;32s/,$//" package.json
+fi
 
 fi
 
