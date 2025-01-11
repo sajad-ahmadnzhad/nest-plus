@@ -43,7 +43,7 @@ function setupMariadbConfig(){
       ;;
       "MikroORM")
       INSTALL_PACKAGES+=("@mikro-orm/mariadb")
-      sed -i "2c\import { MariaDbDriver } from '@mikro-orm/mariadb';" configs/mikroOrm.config.ts
+      sed -i "2c\import { MariaDbDriver } from '@mikro-orm/mariadb';" src/configs/mikroOrm.config.ts
       sed -i "14c\    driver: MariaDbDriver," src/configs/mikroOrm.config.ts
       sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\n' .env
       ;;
