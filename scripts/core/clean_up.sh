@@ -1,7 +1,6 @@
 #!/bin/bash
-source scripts/core/generate_structure.sh
 
-cd src
+cd "$PROJECT_NAME/src"
 rm app.controller.ts app.service.ts
 mv app.module.ts modules/app
-cd ..
+cd ../..

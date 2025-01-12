@@ -1,8 +1,9 @@
 #!/bin/bash
+source scripts/core/helpers.sh
 
 # Setup typeorm config and create typeorm.config file.
 function setupTypeOrmConfig() {
-cd src/configs
+cd $PROJECT_NAME/src/configs
 touch typeorm.config.ts
 
 # Add typeorm config in app.module.ts
@@ -51,10 +52,10 @@ import { typeormConfig } from "../../configs/typeorm.config";
 export class AppModule {}
 EOF
 
-cd ../..
+cd ../../..
 
 # Add dependencies for install
-INSTALL_PACKAGES+=("typeorm" "@nestjs/typeorm")
+savePackages "typeorm" "@nestjs/typeorm"
 
 return 0
 }
@@ -62,7 +63,7 @@ return 0
 
 # Setup mongoose config and create mongoose.config file.
 function setupMongooseConfig(){
-cd src/configs
+cd $PROJECT_NAME/src/configs
 touch mongoose.config.ts
 
 # Create and insert into mongoose.config.ts
@@ -104,21 +105,21 @@ import { mongooseConfig } from '../../configs/mongoose.config';
 export class AppModule {}
 DOF
 
-cd ../..
+cd ../../..
 
 # Add mongoose config envs
-sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=\nDB_PASSWORD=\n" ../.env
+sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=\nDB_PASSWORD=\n" $PROJECT_NAME/.env
 
 # Add dependencies for install
-INSTALL_PACKAGES+=("@nestjs/mongoose" "mongoose")
+savePackages "@nestjs/mongoose" "mongoose"
 
   return 0
 }
 
 # Setup mikroOrm config and create mikroOrm.config file.
 function setupMikroOrmConfig() {
-  
-cd src/configs
+cd $PROJECT_NAME/src/configs
+
 touch mikroOrm.config.ts
 
 # Create and insert into mikroOrm.config.ts
@@ -170,10 +171,10 @@ import { mikroOrmConfig } from '../../configs/mikroOrm.config';
 export class AppModule {}
 DOF
 
-cd ../..
+cd ../../..
 
 # Add dependencies for install
-INSTALL_PACKAGES+=("@mikro-orm/nestjs" "@mikro-orm/core")
+savePackages "@mikro-orm/nestjs" "@mikro-orm/core"
 
   return 0
 }

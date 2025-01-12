@@ -2,8 +2,8 @@
 source scripts/core/helpers.sh
 
 while true; do
-IS_INSTALL_FZF=$(command -v fzf)
 
+IS_INSTALL_FZF=$(command -v fzf)
 if [ $? != 0 ]; then
     echo -e "${YELLOW}Please install fzf to continue...
 example for linux: sudo apt install fzf
@@ -21,4 +21,5 @@ fi
 echo -e "${GREEN}fzf installed successfully${RESET}"
 break
 fi
+break
 done

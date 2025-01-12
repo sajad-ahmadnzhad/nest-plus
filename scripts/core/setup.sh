@@ -1,19 +1,25 @@
 #!/bin/bash
+set -e
+
 source scripts/core/helpers.sh
 
-bash scripts/dependencies/install-fzf.sh
+source scripts/dependencies/install-fzf.sh
+
+trap cleanupTmpFile EXIT SIGINT SIGTERM
 
 # Get project name form user
 get_project_name
 
 # Get the selected package manager
-get_package_manager $PROJECT_NAME
+get_package_manager 
 
 # Setup env files
 setup_envs
 
 # Generate modular folder structure
-bash scripts/core/generate_structure.sh
+source scripts/core/generate_structure.sh
+
+source scripts/core/clean_up.sh
 
 # Setup base appModule
 setupAppModule
@@ -27,14 +33,14 @@ removePrettierAndESLint
 # Removes Test configuration files.
 removeTestFiles
 
-bash scripts/features/orm_selection.sh
+source scripts/features/orm_selection.sh 
 
-bash scripts/features/database_selection.sh
+source scripts/features/database_selection.sh
 
-bash scripts/features/other_selection.sh
+source scripts/features/other_selection.sh
 
 setupConfigModule
 
 manageEnvFile
 
-bash scripts/features/install_dependencies_selection.sh
+source scripts/features/install_dependencies_selection.sh

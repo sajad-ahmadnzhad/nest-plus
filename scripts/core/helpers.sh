@@ -8,13 +8,29 @@ YELLOW='\e[33m'
 BLUE='\e[34m'
 RESET='\e[0m'
 
-# Get the selected package manager
-function get_package_manager(){
-local $PROJECT_NAME=$1
+INSTALL_PACKAGES_FILE="/tmp/install_packages.sh"
+
+function cleanupTmpFile() {
+  if [[ -f "$INSTALL_PACKAGES_FILE" ]]; then
+    rm -f "$INSTALL_PACKAGES_FILE"
+  fi
+}
 
 # Array to hold the names of packages to be installed in the future
-INSTALL_PACKAGES=()
+function savePackages(){
+  if [ -f $INSTALL_PACKAGES_FILE ]; then
+    source $INSTALL_PACKAGES_FILE
+    else 
+    INSTALL_PACKAGES=()
+  fi
 
+  INSTALL_PACKAGES+=($@)
+
+  declare -p INSTALL_PACKAGES > $INSTALL_PACKAGES_FILE
+}
+
+# Get the selected package manager
+function get_package_manager(){
 # Create a new NestJS project with the specified name and save the output
 local OUTPUT=$(npx nest new "$PROJECT_NAME" --skip-install 2>&1 | tee /dev/tty)
 
@@ -29,8 +45,6 @@ if [[ ! -n "$PACKAGE_MANAGER" ]]; then
     exit 1
 fi
 
-cd "$PROJECT_NAME"
-
 return 0
 }
 
@@ -44,9 +58,12 @@ while true; do
     PROJECT_NAME=$(echo "$PROJECT_NAME" | cut -d' ' -f1)
     if [ -z "$PROJECT_NAME" ]; then
      echo -e "${RED}Project name is required${RESET}"
-
-    else break
+     continue
+    elif [ -d "$PROJECT_NAME" ]; then
+      echo -e "${RED}Directory with this name already exists${RESET}"
+      continue
     fi
+break
 done
 
 return 0
@@ -54,6 +71,7 @@ return 0
 
 # Setup env files
 function setup_envs(){
+cd $PROJECT_NAME
     touch .env
     touch .env.example
 
@@ -62,10 +80,12 @@ cat << EOF > ".env"
 #Application configs
 PORT=4000
 EOF
+cd ..
 }
 
 # Setup base app module
 function setupAppModule() {
+cd $PROJECT_NAME
 cat << 'EOF' > src/modules/app/app.module.ts
 import { Module } from '@nestjs/common';
 
@@ -76,18 +96,22 @@ import { Module } from '@nestjs/common';
 })
 export class AppModule {}
 EOF
+cd ..
     return 0
 }
 
 # Updates the path of the main application file
 function modifyMainFile(){
+  cd $PROJECT_NAME
   sed -i "2s/app.module/modules\/app\/app.module/" "src/main.ts"
 
+  cd ..
   return 0
 }
 
 # Removes ESLint and Prettier configuration files and updates the package.json.
 function removePrettierAndESLint(){
+cd $PROJECT_NAME
 promptYesOrNo "$(echo -e "${YELLOW}prettierrc and eslintrc.js be removed?${RESET}")"
 
 if [ $INPUT = "y" ]; then 
@@ -96,12 +120,13 @@ if [ $INPUT = "y" ]; then
     # Remove lines from package.json
     sed -i "10d;15d;37,41d;43d" package.json
 fi
-
+cd ..
 return 0
 }
 
 # Removes Test configuration files and updates the package.json.
 function removeTestFiles(){
+cd $PROJECT_NAME
 promptYesOrNo "$(echo -e "${YELLOW}Test files are deleted?${RESET}")"
 
 if [ $INPUT = "y" -a -d "test" ]; then
@@ -119,11 +144,13 @@ fi
 
 fi
 
+cd ..
+
 return 0
 }
 
 function setupConfigModule() {
-cd src
+cd "$PROJECT_NAME/src"
 local LINE=$(sed -n '4p' modules/app/app.module.ts | tr -d '[:space:]') 
 local EXPECTED="imports:[],"
 
@@ -135,20 +162,20 @@ fi
 
 sed -i '2i \import { ConfigModule } from "@nestjs/config";' modules/app/app.module.ts
 
-INSTALL_PACKAGES+=("@nestjs/config")
+savePackages "@nestjs/config" 
 
-cd ..
+cd ../..
 
   return 0
 }
 
 function manageEnvFile() {
-cd src
+cd "$PROJECT_NAME/src"
 
 cat ../.env > ../.env.example
 sed -i 's/=\(.*\)$/=/' ../.env.example
 
-cd ..
+cd ../..
 
   return 0
 }
@@ -177,6 +204,7 @@ function retryCommand() {
 }
 
 function installPackages() {
+  cd $PROJECT_NAME
   echo -e "${BLUE}Please Wait for installing ${INSTALL_PACKAGES[@]} packages.....${RESET}"
   
   retryCommand "$1" 3 "Installing base packages"
@@ -185,7 +213,7 @@ function installPackages() {
   fi
 
   echo -e "${BLUE}Wait for installing additional packages.....${RESET}"
-  retryCommand "$2 ${INSTALL_PACKAGES[@]}" 3 "Installing additional packages"
+  retryCommand "$2" 3 "Installing additional packages"
   if [ $? -ne 0 ]; then
     return 1
   fi

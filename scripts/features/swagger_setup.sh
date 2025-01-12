@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function setupSwaggerConfig(){ 
-cd src
+cd $PROJECT_NAME/src
 
 touch configs/swagger.config.ts
 
@@ -42,9 +42,9 @@ sed -i '4i \\' main.ts
 sed -i '7i \\n\n' main.ts
 sed -i '8c \  swaggerConfigInit(app);' main.ts
 
-cd ..
+cd ../..
 
-INSTALL_PACKAGES+=("@nestjs/swagger")
+savePackages "@nestjs/swagger"
 
   return 0
 }

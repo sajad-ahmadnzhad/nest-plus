@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function setupRedisConfig(){
-cd src
+cd $PROJECT_NAME/src
 touch configs/redis.config.ts
 
-cat << EOF > src/configs/redis.config.ts
+cat << EOF > configs/redis.config.ts
 import { RedisModuleOptions } from "@nestjs-modules/ioredis";
 
 export default (): RedisModuleOptions => {
@@ -29,16 +29,16 @@ fi
 
 sed -i '1i \#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
 
-cd ..
+cd ../..
 
-INSTALL_PACKAGES+=("@nestjs-modules/ioredis")
+savePackages "@nestjs-modules/ioredis"
 
   return 0
 }
 
 
 function setupRedisCacheManagerConfig() {
-cd src
+cd $PROJECT_NAME/src
 touch configs/cache.config.ts
 
 cat << EOF > configs/cache.config.ts
@@ -74,9 +74,9 @@ fi
 
 sed -i '1i \#Redis configs\nREDIS_HOST=localhost\nREDIS_PORT=6379\nDB_PASSWORD=\n' ../.env
 
-cd ..
+cd ../..
 
-INSTALL_PACKAGES+=("@nestjs/cache-manager" "cache-manager-redis-yet")
+savePackages "@nestjs/cache-manager" "cache-manager-redis-yet"
 
 return 0
 }
