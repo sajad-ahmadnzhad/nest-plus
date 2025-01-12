@@ -104,7 +104,7 @@ promptYesOrNo "$(echo -e "${YELLOW}Test files are deleted?${RESET}")"
 
 if [ $INPUT = "y" -a -d "test" ]; then
 rm -rf 'test'
-rm src/app.controller.spec.ts
+rm src/modules/app/app.controller.spec.ts
 
 # Remove specific lines from package.json based on the presence of .eslintrc.js and .prettierrc files
 if [ -f ".eslintrc.js" -a -f ".prettierrc" ]; then
