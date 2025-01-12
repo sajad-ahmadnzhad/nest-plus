@@ -76,17 +76,17 @@ src/
 <hr />
 
 <h2>📦 Installation</h2>
-<pre><code>git clone https://github.com/your-repo/nest-plus.git
+<pre><code>git clone https://github.com/sajad-ahmadnzhad/nest-plus/
 cd nest-plus
-chmod +x nest-plus.sh
-./nest-plus.sh
+chmod +x main.sh
+./main.sh
 </code></pre>
 
 <hr />
 
 <h2>⚙️ How It Works</h2>
 <ol>
-  <li>Run the script using <code>./nest-plus.sh</code>.</li>
+  <li>Run the script using <code>./main.sh</code>.</li>
   <li>Answer the interactive prompts to customize your project:
     <ul>
       <li>Select your preferred ORM/ODM.</li>
