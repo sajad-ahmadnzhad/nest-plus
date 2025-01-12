@@ -1,6 +1,6 @@
 #!/bin/bash
 source scripts/user_prompts/questions.sh
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 promptYesOrNo "$(echo -e "${BLUE}Need more options?"${RESET})"
 if [ "$INPUT" = 'y' ]; then

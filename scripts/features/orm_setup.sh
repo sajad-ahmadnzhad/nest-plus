@@ -1,5 +1,5 @@
 #!/bin/bash
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 # Setup typeorm config and create typeorm.config file.
 function setupTypeOrmConfig() {

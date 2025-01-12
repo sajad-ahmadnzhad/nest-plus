@@ -1,6 +1,6 @@
 #!/bin/bash
 source scripts/features/redis_setup.sh
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 CHOICE_REDIS=$(printf "Redis cache manager\nRedis\nNo redis" | fzf --prompt="Select the desired option for Redis" )
 case $CHOICE_REDIS in 

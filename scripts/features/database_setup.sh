@@ -1,5 +1,5 @@
 #!/bin/bash
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 function setupMysqlConfig(){
 cd $PROJECT_NAME
@@ -41,7 +41,7 @@ function setupMariadbConfig(){
   cd $PROJECT_NAME
   case "$CHOICE_ORMS" in 
       "TypeORM")
-      savePackages "mariadb"
+      savePackages "mysql"
       sed -i "14s/postgres/mariadb/" src/configs/typeorm.config.ts
       sed -i '1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mariadb\nDB_USERNAME=root\nDB_PASSWORD=\nSYNCHRONIZE=1\n' .env
       ;;

@@ -1,6 +1,6 @@
 #!/bin/bash
 source scripts/features/database_setup.sh
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 if [[ "$CHOICE_ORMS" != "No Database" && "$CHOICE_ORMS" != "Mongoose" ]]; then
 CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite" | fzf --prompt="Select database: ")

@@ -1,5 +1,5 @@
 #!/bin/bash
-source scripts/core/helpers.sh
+source scripts/config/config.sh
 
 while true; do
 
