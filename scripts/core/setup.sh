@@ -3,7 +3,7 @@ set -e
 
 source scripts/core/helpers.sh
 
-source scripts/dependencies/install-fzf.sh
+bash scripts/dependencies/install-fzf.sh
 
 trap cleanupTmpFile EXIT SIGINT SIGTERM
 
