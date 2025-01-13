@@ -63,34 +63,22 @@ return 0
 
 # Setup mongoose config and create mongoose.config file.
 function setupMongooseConfig(){
-cd $PROJECT_NAME/src/configs
+cd $PROJECT_NAME
 touch mongoose.config.ts
 
 # Create and insert into mongoose.config.ts
-cat << "EOF" > mongoose.config.ts
+cat << "EOF" > src/configs/mongoose.config.ts
 export const mongooseConfig = (): string => {
   const {
-    DB_HOST,
-    DB_PORT,
-    DB_NAME,
-    DB_USERNAME,
-    DB_PASSWORD,
+    MONGODB_URI,
   } = process.env;
 
-  let uri = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
-  
-  if (DB_USERNAME && DB_PASSWORD) {
-    uri = `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
-  }
-
-  return uri
+  return MONGODB_URI as string
 };
 EOF
 
-cd "../modules"
-
 # Add mongoose config in app.module.ts
-cat << DOF > app/app.module.ts
+cat << DOF > src/modules/app/app.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { mongooseConfig } from '../../configs/mongoose.config';
@@ -105,13 +93,13 @@ import { mongooseConfig } from '../../configs/mongoose.config';
 export class AppModule {}
 DOF
 
-cd ../../..
-
 # Add mongoose config envs
-sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=\nDB_PASSWORD=\n" $PROJECT_NAME/.env
+sed -i "1i \\#Database configs\nMONGODB_URI=mongodb://localhost:27017/${PROJECT_NAME}\n" ./.env
 
 # Add dependencies for install
 savePackages "@nestjs/mongoose" "mongoose"
+
+cd ..
 
   return 0
 }
