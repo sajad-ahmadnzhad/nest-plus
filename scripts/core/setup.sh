@@ -7,6 +7,8 @@ bash scripts/dependencies/install-fzf.sh
 
 bash scripts/dependencies/install-nodejs.sh
 
+bash scripts/dependencies/install-npm.sh
+
 trap cleanupTmpFile EXIT SIGINT SIGTERM
 
 # Get project name form user
