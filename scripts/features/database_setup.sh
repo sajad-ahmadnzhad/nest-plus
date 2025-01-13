@@ -83,7 +83,9 @@ function setupMongodbConfig(){
   "TypeORM")
   savePackages "mongodb"
   sed -i "14s/postgres/mongodb/" src/configs/typeorm.config.ts
-  sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=root\nDB_PASSWORD=\nSYNCHRONIZE=1\n" .env
+  sed -i "5c\   MONGODB_URI," src/configs/typeorm.config.ts
+  sed -i "6,10d;16,20 d;15c \\    url: MONGODB_URI," src/configs/typeorm.config.ts
+  sed -i "1i \\#Database configs\nMONGODB_URI=mongodb://localhost:27017/${PROJECT_NAME}\n" .env
   ;;
   "MikroORM")
   savePackages "@mikro-orm/mongodb"
