@@ -3,7 +3,7 @@ source scripts/features/database_setup.sh
 source scripts/config/config.sh
 
 if [[ "$CHOICE_ORMS" != "No Database" && "$CHOICE_ORMS" != "Mongoose" ]]; then
-CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite" | fzf --prompt="Select database: ")
+CHOICE_DB=$(printf "Mysql\nPostgresql\nMariadb\nSqlite\nMongodb" | fzf --prompt="Select database: ")
 
 case $CHOICE_DB in 
     "Mysql")
@@ -21,6 +21,10 @@ case $CHOICE_DB in
     "Sqlite")
     setupSqliteConfig
     echo -e "${GREEN}Sqlite was set as the database${RESET}"
+    ;;
+    "Mongodb")
+    setupMongodbConfig
+    echo -e "${GREEN}Mongodb was set as the database${RESET}"
     ;;
     *)
     echo -e "${RED}No db selected${RESET}"

@@ -75,3 +75,26 @@ function setupSqliteConfig(){
   cd ..
   return 0
 }
+
+function setupMongodbConfig(){
+  cd "$PROJECT_NAME"
+
+  case "$CHOICE_ORMS" in 
+  "TypeORM")
+  savePackages "mongodb"
+  sed -i "14s/postgres/mongodb/" src/configs/typeorm.config.ts
+  sed -i "1i \\#Database configs\nDB_HOST=localhost\nDB_PORT=27017\nDB_NAME=${PROJECT_NAME}\nDB_USERNAME=root\nDB_PASSWORD=\nSYNCHRONIZE=1\n" .env
+  ;;
+  "MikroORM")
+  savePackages "@mikro-orm/mongodb"
+  sed -i "2c\import { MongoDriver } from '@mikro-orm/mongodb';" src/configs/mikroOrm.config.ts
+  sed -i "14c\    driver: MongoDriver," src/configs/mikroOrm.config.ts
+  sed -i "6c\   MONGODB_URI," src/configs/mikroOrm.config.ts
+  sed -i "7,10d;16,19d;15c \\    clientUrl: MONGODB_URI," src/configs/mikroOrm.config.ts
+  sed -i "1i \\#Database configs\nMONGODB_URI=mongodb://localhost:27017/${PROJECT_NAME}\n" .env
+  ;;
+  esac
+
+  cd ..
+  return 0
+}
