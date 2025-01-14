@@ -13,4 +13,12 @@ if [ "$INPUT" = 'y' ]; then
         setupSwaggerConfig
         echo -e "${GREEN}Generated swagger configs successfully${RESET}"
     fi
+
+    promptYesOrNo "$(echo -e "${BLUE}add cors?${RESET}")"
+    
+    if [ $INPUT = 'y' ]; then
+        source scripts/features/cors_setup.sh
+        setupCorsConfig
+        echo -e "${GREEN}Generated cors configs successfully${RESET}"
+    fi
 fi
