@@ -6,7 +6,7 @@ promptYesOrNo "$(echo -e "${BLUE}Need more options?"${RESET})"
 if [ "$INPUT" = 'y' ]; then
     source scripts/features/redis_selection.sh
 
-    promptYesOrNo "$(echo -e "${BLUE}add swagger?${RESET}")"
+    promptYesOrNo "$(echo -e "${BLUE}Would you like to integrate Swagger for API documentation?${RESET}")"
     
     if [ $INPUT = 'y' ]; then
         source scripts/features/swagger_setup.sh
@@ -14,7 +14,7 @@ if [ "$INPUT" = 'y' ]; then
         echo -e "${GREEN}Generated swagger configs successfully${RESET}"
     fi
 
-    promptYesOrNo "$(echo -e "${BLUE}add cors?${RESET}")"
+    promptYesOrNo "$(echo -e "${BLUE}Do you want to enable CORS for cross-origin requests?${RESET}")"
     
     if [ $INPUT = 'y' ]; then
         source scripts/features/cors_setup.sh
