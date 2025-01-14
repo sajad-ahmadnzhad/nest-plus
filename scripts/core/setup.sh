@@ -47,4 +47,6 @@ setupConfigModule
 
 manageEnvFile
 
+setupValidation
+
 source scripts/features/install_dependencies_selection.sh

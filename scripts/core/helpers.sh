@@ -195,3 +195,17 @@ function installPackages() {
   echo -e "${BLUE}Starting project....${RESET}"
   command $3 "start:dev"
 }
+
+function setupValidation(){
+cd $PROJECT_NAME
+
+sed -i 's/providers: \[\]/providers: [\n    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },\n  ],/' src/modules/app/app.module.ts
+
+sed -i '2i \\import { APP_PIPE } from "@nestjs/core";' src/modules/app/app.module.ts
+sed -i '1c\\import { Module, ValidationPipe } from "@nestjs/common";' src/modules/app/app.module.ts
+
+savePackages "class-validator" "class-transformer"
+cd ..
+
+  return 0
+}
