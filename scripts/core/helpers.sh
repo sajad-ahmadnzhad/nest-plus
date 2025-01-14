@@ -63,9 +63,9 @@ cat << 'EOF' > src/modules/app/app.module.ts
 import { Module } from '@nestjs/common';
 
 @Module({
-    imports: [],
-    controllers: [],
-    providers: []
+  imports: [],
+  controllers: [],
+  providers: []
 })
 export class AppModule {}
 EOF
@@ -80,7 +80,7 @@ function modifyMainFile(){
   sed -i '1a \\import { Logger } from "@nestjs/common";' src/main.ts
   sed -i '6a \\  const logger = new Logger("NestApplication");\n' src/main.ts
   sed -i "9a \n" src/main.ts
-  sed -i '10c \  logger.log(`Application running on port ${PORT}`);' src/main.ts
+  sed -i '10c \  logger.log(`Application running on port ${process.env.PORT}`);' src/main.ts
 
   cd ..
   return 0
@@ -160,7 +160,7 @@ cd ../..
 function setupValidation(){
 cd $PROJECT_NAME
 
-sed -i 's/providers: \[\]/providers: [\n    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },\n  ],/' src/modules/app/app.module.ts
+sed -i 's/providers: \[\]/providers: [\n    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },\n  ]/' src/modules/app/app.module.ts
 
 sed -i '2i \\import { APP_PIPE } from "@nestjs/core";' src/modules/app/app.module.ts
 sed -i '1c\\import { Module, ValidationPipe } from "@nestjs/common";' src/modules/app/app.module.ts
