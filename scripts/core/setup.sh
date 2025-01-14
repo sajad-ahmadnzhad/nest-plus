@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
-
 source scripts/core/helpers.sh
+
+PROJECT_NAME=data
+
+modifyMainFile
+
+exit 1
+
 
 bash scripts/dependencies/install-fzf.sh
 
