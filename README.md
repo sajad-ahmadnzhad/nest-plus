@@ -53,9 +53,9 @@
 <h3>4. Swagger API Documentation</h3>
 <p>Generate beautiful and interactive API documentation with Swagger. Impress your team and clients with professional-grade API specs!</p>
 
-<h3>4. CORS Configuration</h3> <p>Secure your APIs with customizable CORS settings. Control origins, methods, headers, and credentials to ensure safe cross-origin requests and protect your backend effortlessly with <strong>Nest-Plus</strong>.</p>
+<h3>5. CORS Configuration</h3> <p>Secure your APIs with customizable CORS settings. Control origins, methods, headers, and credentials to ensure safe cross-origin requests and protect your backend effortlessly with <strong>Nest-Plus</strong>.</p>
 
-<h3>5. Modular Structure</h3>
+<h3>6. Modular Structure</h3>
 <p><strong>Nest-Plus</strong> generates a clean and scalable structure for your NestJS projects:</p>
 <pre><code>
 src/
