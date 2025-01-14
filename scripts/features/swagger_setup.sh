@@ -35,12 +35,11 @@ function swaggerAuthConfig(): SecuritySchemeObject {
 }
 EOF
 
-sed -i "3c \import { swaggerConfigInit } from './configs/swagger.config';" main.ts
-sed -i '4i \\' main.ts
+sed -i "3a \import { swaggerConfigInit } from './configs/swagger.config';" main.ts
+sed -i '9i \\' main.ts
+sed -i '10c \  swaggerConfigInit(app);\n' main.ts
 
 
-sed -i '7i \\n\n' main.ts
-sed -i '8c \  swaggerConfigInit(app);' main.ts
 
 cd ../..
 
